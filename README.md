@@ -12,12 +12,12 @@ Use this command to extract the information on the binary file extracted using t
 python sdlog2_dump.py test_files/16-07-13_17-52-16.bin -f "export.csv" -t "TIME" -d "," -n ""
 ```
 
-#### geotagging
+#### geo_tag_images
 
-Use to geotag a set of images 
+Use this script to geotag a set of images. It uses the difference between UTC and GPS time (17 s) to accomodate images on the local time of the PC running the script.
 
 ```sh
-python geotagging.py --logfile=log001.px4log --input=images/ --output=imagesWithTag/
+python geo_tag_images.py --logfile=mylog.bin --input=images/ --output=taggedImages/
 ```
 
 # Based on
