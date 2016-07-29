@@ -79,7 +79,7 @@ class SDLog2Parser:
 
         with open(str(self.__file_name)+"_GPS_only.csv",'w') as f:
             for key, value in self.gps_csv[0].iteritems():
-                labels = labels + str(key) + ","
+                labels = labels + "GPS_" + str(key) + ","
 
             f.write(labels[:len(labels)-1] + "\n")
 
