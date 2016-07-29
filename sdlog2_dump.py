@@ -77,7 +77,7 @@ class SDLog2Parser:
     def saveGPSCSV(self):
         labels = ""
 
-        with open(str(self.__file_name)+"GPS_only.csv",'w') as f:
+        with open(str(self.__file_name)+"_GPS_only.csv",'w') as f:
             for key, value in self.gps_csv[0].iteritems():
                 labels = labels + str(key) + ","
 
