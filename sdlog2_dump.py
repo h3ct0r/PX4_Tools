@@ -69,9 +69,26 @@ class SDLog2Parser:
     __correct_errors = False
     __file_name = None
     __file = None
+    gps_csv = []
     
     def __init__(self):
         return
+
+    def saveGPSCSV(self):
+        labels = ""
+
+        with open(str(self.__file_name)+"GPS_only.csv",'w') as f:
+            for key, value in self.gps_csv[0].iteritems():
+                labels = labels + str(key) + ","
+
+            f.write(labels[:len(labels)-1] + "\n")
+
+            for elem in self.gps_csv:
+                values = ""
+                for key, value in elem.iteritems():
+                    values = values + str(value) + ","  #line of data in csv
+                f.write(values[:len(values)-1] + "\n")
+
     
     def reset(self):
         self.__msg_descrs = {}      # message descriptions by message type map
@@ -232,7 +249,7 @@ class SDLog2Parser:
         self.__ptr += self.MSG_FORMAT_PACKET_LEN
     
     def __parseMsg(self, msg_descr):
-        msg_length, msg_name, msg_format, msg_labels, msg_struct, msg_mults = msg_descr
+        msg_length, msg_name, msg_format, msg_labels, msg_struct, msg_mults = msg_descr        
         if not self.__debug_out and self.__time_msg != None and msg_name == self.__time_msg and self.__csv_updated:
             self.__printCSVRow()
             self.__csv_updated = False
@@ -254,7 +271,9 @@ class SDLog2Parser:
                     label = msg_labels[i]
                     if show_fields == "*" or label in show_fields:
                         s.append(label + "=" + str(data[i]))
+                            
                 print("MSG %s: %s" % (msg_name, ", ".join(s)))
+
             else:
                 # update CSV data buffer
                 for i in range(len(data)):
@@ -265,7 +284,26 @@ class SDLog2Parser:
                             self.__csv_updated = True
                 if self.__time_msg == None:
                     self.__printCSVRow()
+
+
+
+            if True: #Feed gps_csv array to separately dump it
+                
+                if msg_name == "GPS":
+                    gps_dict = {}
+                    for i in range(len(data)):
+                        label = msg_labels[i]
+                        gps_dict[label] = str(data[i])
+                                
+                    self.gps_csv.append(gps_dict)
+
+
+
+
         self.__ptr += msg_length
+        
+        
+       
 
 def _main():
     if len(sys.argv) < 2:
@@ -331,6 +369,8 @@ def _main():
     parser.setDebugOut(debug_out)
     parser.setCorrectErrors(correct_errors)
     parser.process(fn)
+    parser.saveGPSCSV()
+    
 
 if __name__ == "__main__":
     _main()
